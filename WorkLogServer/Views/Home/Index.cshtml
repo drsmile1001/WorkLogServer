@@ -1,0 +1,114 @@
+﻿@model WorkLogServer.Services.WorkLog[]
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://cdn.syncfusion.com/ej2/dist/ej2.min.js" type="text/javascript"></script>
+    <link href="https://cdn.syncfusion.com/ej2/material.css" rel="stylesheet">
+
+    <style>
+        body {
+            touch-action: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="stackblitz-container material">
+        <div class="control-section" style="overflow:auto;display: flex;">
+            <div id="PivotView" style="width: 58%;height: 100%;">
+            </div>
+            <div id="PivotFieldList" style="width: 42%;height: 100%;">
+            </div>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>人員</th>
+                    <th>專案</th>
+                    <th>項目</th>
+                    <th>類型</th>
+                    <th>費事</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{ 
+                    foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@(item.Person)</td>
+                            <td>@(item.Project)</td>
+                            <td>@(item.Subject)</td>
+                            <td>@(item.Type)</td>
+                            <td>@(item.Duration)</td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+
+    </div>
+    <script>
+        ej.base.enableRipple(false);
+        var pivotObj = new ej.pivotview.PivotView({
+            enginePopulated: function () {
+                if (!ej.base.Browser.isDevice && fieldlistObj && pivotObj) {
+                    fieldlistObj.update(pivotObj);
+                }
+            },
+            width: '99%',
+            height: 600,
+            gridSettings: { columnWidth: 140 }
+        });
+        pivotObj.appendTo('#PivotView');
+
+        var dataSource = @Html.Raw(Json.Serialize(Model));
+
+        console.log(dataSource)
+
+        var fieldlistObj = new ej.pivotview.PivotFieldList({
+            dataSourceSettings: {
+                dataSource: dataSource,
+                expandAll: true,
+                allowLabelFilter: true,
+                allowValueFilter: true,
+                columns: [],
+                rows: [
+                    { name: 'project', caption: '專案' }
+                ],
+                values: [{ name: 'duration', caption: '費時'}],
+                enableSorting: true
+            },
+            allowCalculatedField: true,
+            renderMode: 'Fixed',
+            load: function () {
+                if (ej.base.Browser.isDevice) {
+                    fieldlistObj.renderMode = 'Popup';
+                    fieldlistObj.target = '.control-section';
+                    ej.base.setStyleAttribute(document.getElementById('PivotFieldList'), {
+                        'width': 0,
+                        'height': 0,
+                        'float': 'left',
+                        'display': 'none'
+                    });
+                }
+            },
+            dataBound: function () {
+                if (ej.base.Browser.isDevice) {
+                    pivotObj.element.style.width = '100%';
+                    pivotObj.allowCalculatedField = true;
+                    pivotObj.showFieldList = true;
+                }
+                pivotObj.tooltip.destroy();
+                pivotObj.refresh();
+            },
+            enginePopulated: function () {
+                fieldlistObj.updateView(pivotObj);
+            }
+        });
+        fieldlistObj.appendTo('#PivotFieldList');
+    </script>
+</body>
+</html>
