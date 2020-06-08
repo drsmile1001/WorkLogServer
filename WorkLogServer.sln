@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30104.148
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkLogServer", "WorkLogServer\WorkLogServer.csproj", "{BECA880A-1B5E-4E78-A17D-B54FAB94DC4F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BECA880A-1B5E-4E78-A17D-B54FAB94DC4F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BECA880A-1B5E-4E78-A17D-B54FAB94DC4F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BECA880A-1B5E-4E78-A17D-B54FAB94DC4F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BECA880A-1B5E-4E78-A17D-B54FAB94DC4F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {9A1BE3FA-92BB-4D36-AE46-86F4468FEC75}
+	EndGlobalSection
+EndGlobal
