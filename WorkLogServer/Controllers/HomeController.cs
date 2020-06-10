@@ -16,7 +16,7 @@ namespace WorkLogServer.Controllers
             _workLogService = workLogService;
         }
 
-        public async Task<IActionResult> Index(string id)
+        public async Task<IActionResult> Index(string id,DateTime? start = null,DateTime? end = null)
         {
             var entries = await _workLogService.GetCalendarEntries(id);
 
@@ -24,14 +24,15 @@ namespace WorkLogServer.Controllers
 
             foreach (var entry in entries)
             {
-                var workLogs = await _workLogService.Get(entry.Id, entry.Key);
-                foreach (var workLog in workLogs)
-                {
-                    workLog.Person = entry.Person;
-                }
+                var workLogs = await _workLogService.Get(entry.Id, entry.Key, entry.Person);
                 allPersonWorkLogs.AddRange(workLogs);
             }
-            return View(allPersonWorkLogs.ToArray());
+            var model = allPersonWorkLogs
+                .Where(log => log.InRange(start, end))
+                .OrderBy(log=>log.Person)
+                .ThenByDescending(log=>log.StartTime)
+                .ToArray();
+            return View(model);
         }
     }
 }

@@ -23,32 +23,7 @@
             <div id="PivotFieldList" style="width: 42%;height: 100%;">
             </div>
         </div>
-        <table>
-            <thead>
-                <tr>
-                    <th>人員</th>
-                    <th>專案</th>
-                    <th>項目</th>
-                    <th>類型</th>
-                    <th>費事</th>
-                </tr>
-            </thead>
-            <tbody>
-                @{ 
-                    foreach (var item in Model)
-                    {
-                        <tr>
-                            <td>@(item.Person)</td>
-                            <td>@(item.Project)</td>
-                            <td>@(item.Subject)</td>
-                            <td>@(item.Type)</td>
-                            <td>@(item.Duration)</td>
-                        </tr>
-                    }
-                }
-            </tbody>
-        </table>
-
+        <div id="table"></div>
     </div>
     <script>
         ej.base.enableRipple(false);
@@ -65,8 +40,6 @@
         pivotObj.appendTo('#PivotView');
 
         var dataSource = @Html.Raw(Json.Serialize(Model));
-
-        console.log(dataSource)
 
         var fieldlistObj = new ej.pivotview.PivotFieldList({
             dataSourceSettings: {
@@ -109,6 +82,21 @@
             }
         });
         fieldlistObj.appendTo('#PivotFieldList');
+
+        var grid = new ej.grids.Grid({
+            dataSource: dataSource,
+            height: 410,
+            columns: [
+                { field: 'person', headerText: '人員', width: 60 },
+                { field: 'project', headerText: '專案', width: 120 },
+                { field: 'subject', headerText: '工作', width: 150 },
+                { field: 'type', headerText: '類型', width: 60 },
+                { field: 'startTime', headerText: '開始時間', width: 120 },
+                { field: 'endTime', headerText: '結束時間', width: 120 },
+                { field: 'duration', headerText: '費時', width: 60 }
+            ]
+    });
+    grid.appendTo('#table');
     </script>
 </body>
 </html>
