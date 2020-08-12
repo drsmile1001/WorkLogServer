@@ -16,15 +16,13 @@ namespace WorkLogServer.Controllers
             _workLogService = workLogService;
         }
 
-        [Route("Home/Index")]
         [HttpGet]
         public ActionResult Index()
         {
             return View();
         }
 
-        [Route("Home/Search")]
-        [HttpGet]
+        [HttpPost]
         public ActionResult Search(string id,DateTime? start = null,DateTime? end = null)
         {
             return RedirectToAction(nameof(Print), new
@@ -80,14 +78,31 @@ namespace WorkLogServer.Controllers
                 });
             }
 
-            var model = taskResults
+            var logs = taskResults
                 .Select(item=>item.logs)
                 .SelectMany(log=>log)
                 .Where(log => log.InRange(start, end))
                 .OrderBy(log=>log.Person)
                 .ThenByDescending(log=>log.StartTime)
                 .ToArray();
-            return View(model);
+            return View(new PrintModel 
+            {
+                WorkLogs = logs,
+                Id = id,
+                Start = start,
+                End = end
+            });
+        }
+
+        public class PrintModel
+        {
+            public WorkLog[] WorkLogs { get; set; }
+
+            public string Id { get; set; }
+
+            public DateTime? Start { get; set; }
+
+            public DateTime? End { get; set; }
         }
     }
 }

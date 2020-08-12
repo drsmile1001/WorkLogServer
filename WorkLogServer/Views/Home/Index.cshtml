@@ -1,4 +1,4 @@
-﻿@model Dictionary<string,string>
+﻿@model Dictionary<string,string>?
 @{
     Layout = null;
 }
@@ -11,13 +11,14 @@
 <body>
     <div class="container">
         <h1>工作日誌檢視分析工具</h1>
-        @if (Model.ContainsKey("error"))
+        @if (Model?.ContainsKey("error") ?? false)
         {
             <div class="alert alert-warning" role="alert">
                 @Model["error"]
             </div>
         }
-        <form action="/Home/Search">
+        @{
+            Html.BeginForm("Search", "Home", "POST");
             <div class="form-group">
                 <label for="registry">行事曆註冊表ID</label>
                 <input type="text" class="form-control" id="registry" name="id" required>
@@ -30,8 +31,9 @@
                 <label for="start">最晚日期</label>
                 <input type="date" class="form-control" id="end" name="end">
             </div>
-            <button type="submit" class="btn btn-primary">查詢</button>
-        </form>
+            <button type="submit" class="btn btn-primary" asp-controller="Home" asp-action="Search">查詢</button>
+            Html.EndForm();
+        }
     </div>
 </body>
 </html>

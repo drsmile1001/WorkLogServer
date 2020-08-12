@@ -1,4 +1,4 @@
-﻿@model WorkLogServer.Services.WorkLog[]
+﻿@model WorkLogServer.Controllers.HomeController.PrintModel
 @{
     Layout = null;
 }
@@ -8,7 +8,7 @@
 <head>
     <script src="https://cdn.syncfusion.com/ej2/dist/ej2.min.js" type="text/javascript"></script>
     <link href="https://cdn.syncfusion.com/ej2/material.css" rel="stylesheet">
-
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
     <style>
         body {
             touch-action: none;
@@ -16,6 +16,25 @@
     </style>
 </head>
 <body>
+    <div>
+        @{
+            Html.BeginForm("Search","Home",null, FormMethod.Post, null, new { @class="form-inline"  });
+                <div class="form-group">
+                    <label for="registry">行事曆註冊表ID</label>
+                    <input type="text" class="form-control" id="registry" name="id" required value="@Model.Id">
+                </div>
+                <div class="form-group">
+                    <label for="start">最早日期</label>
+                    <input type="date" class="form-control" id="start" name="start" value="@Model.Start?.ToString("yyyy-MM-dd")">
+                </div>
+                <div class="form-group">
+                    <label for="start">最晚日期</label>
+                    <input type="date" class="form-control" id="end" name="end" value="@Model.End?.ToString("yyyy-MM-dd")">
+                </div>
+                <button type="submit" class="btn btn-primary" asp-controller="Home" asp-action="Search">查詢</button>
+            Html.EndForm();
+        }
+    </div>
     <div class="stackblitz-container material">
         <div class="control-section" style="overflow:auto;display: flex;">
             <div id="PivotView" style="width: 58%;height: 100%;">
@@ -39,7 +58,7 @@
         });
         pivotObj.appendTo('#PivotView');
 
-        var dataSource = @Html.Raw(Json.Serialize(Model));
+        var dataSource = @Html.Raw(Json.Serialize(Model.WorkLogs));
 
         var fieldlistObj = new ej.pivotview.PivotFieldList({
             dataSourceSettings: {
