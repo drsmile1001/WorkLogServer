@@ -1,4 +1,4 @@
-﻿@model WorkLogServer.Services.WorkLog[]
+﻿@model Dictionary<string,string>
 @{
     Layout = null;
 }
@@ -6,97 +6,32 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <script src="https://cdn.syncfusion.com/ej2/dist/ej2.min.js" type="text/javascript"></script>
-    <link href="https://cdn.syncfusion.com/ej2/material.css" rel="stylesheet">
-
-    <style>
-        body {
-            touch-action: none;
-        }
-    </style>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
 </head>
 <body>
-    <div class="stackblitz-container material">
-        <div class="control-section" style="overflow:auto;display: flex;">
-            <div id="PivotView" style="width: 58%;height: 100%;">
+    <div class="container">
+        <h1>工作日誌檢視分析工具</h1>
+        @if (Model.ContainsKey("error"))
+        {
+            <div class="alert alert-warning" role="alert">
+                @Model["error"]
             </div>
-            <div id="PivotFieldList" style="width: 42%;height: 100%;">
+        }
+        <form action="/Home/Search">
+            <div class="form-group">
+                <label for="registry">行事曆註冊表ID</label>
+                <input type="text" class="form-control" id="registry" name="id" required>
             </div>
-        </div>
-        <div id="table"></div>
+            <div class="form-group">
+                <label for="start">最早日期</label>
+                <input type="date" class="form-control" id="start" name="start">
+            </div>
+            <div class="form-group">
+                <label for="start">最晚日期</label>
+                <input type="date" class="form-control" id="end" name="end">
+            </div>
+            <button type="submit" class="btn btn-primary">查詢</button>
+        </form>
     </div>
-    <script>
-        ej.base.enableRipple(false);
-        var pivotObj = new ej.pivotview.PivotView({
-            enginePopulated: function () {
-                if (!ej.base.Browser.isDevice && fieldlistObj && pivotObj) {
-                    fieldlistObj.update(pivotObj);
-                }
-            },
-            width: '99%',
-            height: 600,
-            gridSettings: { columnWidth: 140 }
-        });
-        pivotObj.appendTo('#PivotView');
-
-        var dataSource = @Html.Raw(Json.Serialize(Model));
-
-        var fieldlistObj = new ej.pivotview.PivotFieldList({
-            dataSourceSettings: {
-                dataSource: dataSource,
-                expandAll: true,
-                allowLabelFilter: true,
-                allowValueFilter: true,
-                columns: [],
-                rows: [
-                    { name: 'project', caption: '專案' }
-                ],
-                values: [{ name: 'duration', caption: '費時'}],
-                enableSorting: true
-            },
-            allowCalculatedField: true,
-            renderMode: 'Fixed',
-            load: function () {
-                if (ej.base.Browser.isDevice) {
-                    fieldlistObj.renderMode = 'Popup';
-                    fieldlistObj.target = '.control-section';
-                    ej.base.setStyleAttribute(document.getElementById('PivotFieldList'), {
-                        'width': 0,
-                        'height': 0,
-                        'float': 'left',
-                        'display': 'none'
-                    });
-                }
-            },
-            dataBound: function () {
-                if (ej.base.Browser.isDevice) {
-                    pivotObj.element.style.width = '100%';
-                    pivotObj.allowCalculatedField = true;
-                    pivotObj.showFieldList = true;
-                }
-                pivotObj.tooltip.destroy();
-                pivotObj.refresh();
-            },
-            enginePopulated: function () {
-                fieldlistObj.updateView(pivotObj);
-            }
-        });
-        fieldlistObj.appendTo('#PivotFieldList');
-
-        var grid = new ej.grids.Grid({
-            dataSource: dataSource,
-            height: 410,
-            columns: [
-                { field: 'person', headerText: '人員', width: 60 },
-                { field: 'project', headerText: '專案', width: 120 },
-                { field: 'subject', headerText: '工作', width: 150 },
-                { field: 'type', headerText: '類型', width: 60 },
-                { field: 'startTime', headerText: '開始時間', width: 120 },
-                { field: 'endTime', headerText: '結束時間', width: 120 },
-                { field: 'duration', headerText: '費時', width: 60 }
-            ]
-    });
-    grid.appendTo('#table');
-    </script>
 </body>
 </html>
